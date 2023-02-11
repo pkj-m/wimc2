@@ -5,16 +5,21 @@ import (
 
 	"github.com/pkj-m/wimc/jobs"
 
-	"log"
-
+	"go.uber.org/zap"
 	"google.golang.org/api/option"
 	"google.golang.org/api/youtube/v3"
+	"log"
 )
 
 func main() {
 	//config.Parse(config{}, configFilePath)
 
 	ctx := context.Background()
+
+	logger, _ := zap.NewProduction()
+	//logger, _ := zap.NewProduction()
+	//defer logger.Sync()
+
 	youtube, err := youtube.NewService(ctx, option.WithAPIKey("my-secret-key"))
 	if err != nil {
 		log.Fatal("failed to instantiate youtube client")

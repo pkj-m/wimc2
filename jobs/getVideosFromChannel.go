@@ -8,7 +8,10 @@ import (
 
 // GetVideosFromChannel accepts a youtube channel link, and downloads list of all videos on the channel
 func GetVideosFromChannel(yt *youtube.Service, channelID string) ([]*youtube.SearchResult, error) {
-	call := yt.Search.List([]string{"snippet"}).ChannelId(channelID).Type("video").MaxResults(20).Order("date")
+	call := yt.Search.List([]string{"snippet"}).
+		ChannelId(channelID).Type("video").
+		MaxResults(20).Order("date")
+
 	resp, err := call.Do()
 	if err != nil {
 		return nil, err
