@@ -1,0 +1,5 @@
+vendor/
+config/
+pkg/
+auth/
+.DS_Store
