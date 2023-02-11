@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"github.com/pkj-m/wimc/config"
 	"github.com/pkj-m/wimc/mongo"
 
@@ -43,8 +44,9 @@ func main() {
 		log.Fatal(err.Error())
 	}
 
+	fmt.Println("new videos: ")
 	for _, result := range newResults {
-		logger.Info("result", zap.Any("result", result))
+		fmt.Printf("[%v] %v\n", result.Id.VideoId, result.Snippet.Title)
 		//video, err := jobs.DownloadVideoFromID(result)
 	}
 

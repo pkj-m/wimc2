@@ -1,5 +1,5 @@
 vendor/
-config/base.yaml
+config/config.yaml
 pkg/
 auth/
 .DS_Store

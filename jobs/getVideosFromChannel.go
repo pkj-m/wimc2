@@ -26,6 +26,8 @@ func GetVideosFromChannel(yt *youtube.Service, logger *zap.Logger, cfg *config.A
 		return nil, errors.New("nil response received")
 	}
 
+	logger.Info("received response from YouTube server")
+
 	// we could extract just the video ID from the result and return a clean string, but in doing so
 	// we also lose out on a bunch of extra information (such as the video title, published at, etc)
 	// which might later come in handy when we try to enrich the FE with more details about the clip
@@ -37,6 +39,8 @@ func GetVideosFromChannel(yt *youtube.Service, logger *zap.Logger, cfg *config.A
 			logger.Info("non video response received from server", zap.Any("item", item))
 		}
 	}
+
+	logger.Info("processed search results", zap.Int("count", len(searchResults)))
 
 	// save the search results in mongo collection
 	err = mongo.SaveSearchResults(cfg, logger, searchResults)

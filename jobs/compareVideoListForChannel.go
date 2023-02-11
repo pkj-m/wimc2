@@ -38,7 +38,7 @@ func CompareVideoListForChannel(cfg *config.AppConfig, logger *zap.Logger, searc
 // indexResultsByVideoID accepts a list of search results and returns a map of same results
 // indexed by the video ID of each result
 func indexResultsByVideoID(results []*youtube.SearchResult) map[string]*youtube.SearchResult {
-	var response map[string]*youtube.SearchResult
+	response := make(map[string]*youtube.SearchResult)
 	for _, result := range results {
 		response[result.Id.VideoId] = result
 	}
@@ -46,7 +46,7 @@ func indexResultsByVideoID(results []*youtube.SearchResult) map[string]*youtube.
 }
 
 func findNewVideos(new map[string]*youtube.SearchResult, old map[string]*youtube.SearchResult) map[string]*youtube.SearchResult {
-	var newVideos map[string]*youtube.SearchResult
+	newVideos := make(map[string]*youtube.SearchResult)
 	for id, res := range new {
 		// if id of video is not found in yesterday's response, it must be a new video
 		if _, ok := old[id]; !ok {
