@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"github.com/pkj-m/wimc/config"
+	"github.com/pkj-m/wimc/mongo"
 
 	"github.com/pkj-m/wimc/jobs"
 
@@ -12,34 +14,38 @@ import (
 )
 
 func main() {
-	//config.Parse(config{}, configFilePath)
-
 	ctx := context.Background()
-
 	logger, _ := zap.NewProduction()
-	//logger, _ := zap.NewProduction()
-	//defer logger.Sync()
+	defer logger.Sync()
 
-	youtube, err := youtube.NewService(ctx, option.WithAPIKey("my-secret-key"))
+	cfg, err := config.LoadConfig()
 	if err != nil {
-		log.Fatal("failed to instantiate youtube client")
+		logger.Fatal("failed to load config", zap.Error(err))
+	}
+	logger.Info("loaded config successfully...")
+
+	mongo.Setup(cfg, logger)
+	logger.Info("connected to mongo...")
+
+	yt, err := youtube.NewService(ctx, option.WithAPIKey(cfg.Youtube.ApiKey))
+	if err != nil {
+		logger.Fatal("failed to instantiate youtube client", zap.Error(err))
 	}
 
-	channelID := "UCpUS8oR-IJSP3gFYrGAWEuQ"
-
-	searchResults, err := jobs.GetVideosFromChannel(youtube, channelID)
+	searchResults, err := jobs.GetVideosFromChannel(yt, logger, cfg)
 	if err != nil {
-		log.Fatal(err.Error())
+		logger.Fatal("failed to fetch videos from youtube", zap.Error(err))
 	}
+	logger.Info("fetched videos from youtube", zap.Any("count", len(searchResults)))
 
-	// compare latest list of videoIDs with previous day to identify how many new videos need to be fetched
-	newResults, err := jobs.CompareVideoListForChannel(searchResults)
+	newResults, err := jobs.CompareVideoListForChannel(cfg, logger, searchResults)
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
 	for _, result := range newResults {
-		video, err := jobs.DownloadVideoFromID(result)
+		logger.Info("result", zap.Any("result", result))
+		//video, err := jobs.DownloadVideoFromID(result)
 	}
 
 	// for _, videoID := range newVideos {
