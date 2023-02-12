@@ -40,7 +40,7 @@ func GetSubtitlesForVideo(yt *youtube.Service, logger *zap.Logger, cfg *config.A
 	var englishSubs *youtube.Caption
 	for _, res := range resp.Items {
 		logger.Info(fmt.Sprintf("caption response: %v", res))
-		if res == nil || res.Snippet == nil {
+		if res == nil {
 			continue
 		}
 		englishSubs = res
