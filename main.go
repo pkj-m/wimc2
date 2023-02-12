@@ -48,6 +48,21 @@ func main() {
 	for _, result := range newResults {
 		fmt.Printf("[%v] %v\n", result.Id.VideoId, result.Snippet.Title)
 		//video, err := jobs.DownloadVideoFromID(result)
+
+		// download the subtitles for the video
+		subs, err := jobs.GetSubtitlesForVideo(yt, logger, cfg, result.Id.VideoId)
+		if err != nil {
+			logger.Error("failed to fetch subtitles", zap.Error(err))
+			// should we try to transcribe using an ML model?
+			continue
+		}
+
+		if subs == nil {
+			logger.Error("nil pointer received")
+			continue
+		}
+
+		fmt.Printf("subs: %s\n", *subs)
 	}
 
 	// for _, videoID := range newVideos {

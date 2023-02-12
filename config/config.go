@@ -26,6 +26,7 @@ type YoutubeConfig struct {
 	ChannelID        string   `yaml:"channel_id"`
 	ChannelListParts []string `yaml:"channel_list_parts"`
 	MaxSearchResults int      `yaml:"max_search_results"`
+	CaptionsPart     []string `yaml:"captions_part"`
 }
 
 func LoadConfig() (*AppConfig, error) {
